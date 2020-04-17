@@ -28,11 +28,11 @@ while not state_complete:
         print("Loaded previous data")
 
         friends, followers = get_usernames(friends_list), get_usernames(followers_list)
-        new_friends = set(data['friends']) - set(friends)
-        new_followers = set(data['followers']) - set(followers)
+        new_followers = set(data['friends']) - set(friends)
+        new_friends = set(data['followers']) - set(followers)
 
-        old_friends = set(friends) - set(data['friends']) 
-        old_followers = set(followers) - set(data['followers'])
+        old_followers = set(friends) - set(data['friends']) 
+        old_friends = set(followers) - set(data['followers'])
 
         print("New Followers: ", ", ".join(new_followers), "\n")
         print("New Friends: ", ", ".join(new_friends), "\n")
