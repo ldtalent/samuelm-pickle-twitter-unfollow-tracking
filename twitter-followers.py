@@ -18,54 +18,58 @@ def update_data(followers, friends):
     pickle.dump( data, open( "save.p", "wb" ) )
     return True
 
-state_complete = False
-while not state_complete:
-    followers_list = api.GetFollowers()
-    friends_list = api.GetFriends()
+def run():
+    state_complete = False
+    while not state_complete:
+        followers_list = api.GetFollowers()
+        friends_list = api.GetFriends()
 
-    try: 
-        data = pickle.load( open( "save.p", "rb" ) )
-        print("Loaded previous data")
-
-        friends, followers = get_usernames(friends_list), get_usernames(followers_list)
-        new_followers = set(data['friends']) - set(friends)
-        new_friends = set(data['followers']) - set(followers)
-
-        old_followers = set(friends) - set(data['friends']) 
-        old_friends = set(followers) - set(data['followers'])
-
-        print("New Followers: ", ", ".join(new_followers), "\n")
-        print("New Friends: ", ", ".join(new_friends), "\n")
-
-        print("Unfollowed Friends: ", ", ".join(old_friends), "\n")
-        print("Unfollowers: ", ", ".join(old_friends), "\n")
-
-        ans = input("Would you like to save this as your new reference point? y/n: ")
-        if ans.lower() == 'y':
-            update_data(followers, friends)
-        
-        ans = input("Do you wish to continue? y/n: ")
-        if ans.lower() == 'n':
-            break
-        else:
-            continue
-
-    except: #file not found
-        ans = input("No prior data found, would you like to create a new reference point? y/n: ")
-        if ans.lower() == 'y':
+        try: 
+            data = pickle.load( open( "save.p", "rb" ) )
+            print("Loaded previous data")
 
             friends, followers = get_usernames(friends_list), get_usernames(followers_list)
-            update_data(followers, friends)
-            print("Updated Successfully")
+            unfollowed = set(data['friends']) - set(friends)
+            un_followers = set(data['followers']) - set(followers)
+
+            new_following = set(friends) - set(data['friends']) 
+            new_followers = set(followers) - set(data['followers'])
+
+            print("New Following: ", ", ".join(new_following), "\n")
+            print("New Followers: ", ", ".join(new_followers), "\n")
+
+            print("Unfollowers: ", ", ".join(un_followers), "\n")
+            print("Un Followed: ", ", ".join(unfollowed), "\n")
+
+            ans = input("Would you like to save this as your new reference point? y/n: ")
+            if ans.lower() == 'y':
+                update_data(followers, friends)
             
             ans = input("Do you wish to continue? y/n: ")
             if ans.lower() == 'n':
                 break
             else:
                 continue
-        else:
-            ans = input("Do you wish to continue? y/n: ")
-            if ans.lower() == 'n':
-                break
+
+        except: #file not found
+            ans = input("No prior data found, would you like to create a new reference point? y/n: ")
+            if ans.lower() == 'y':
+
+                friends, followers = get_usernames(friends_list), get_usernames(followers_list)
+                update_data(followers, friends)
+                print("Updated Successfully")
+                
+                ans = input("Do you wish to continue? y/n: ")
+                if ans.lower() == 'n':
+                    break
+                else:
+                    continue
             else:
-                continue
+                ans = input("Do you wish to continue? y/n: ")
+                if ans.lower() == 'n':
+                    break
+                else:
+                    continue
+
+if __name__ == "__main__":
+    run()
